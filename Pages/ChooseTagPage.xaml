@@ -1,0 +1,56 @@
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:hc="clr-namespace:RadioApp.HandCursorControls"
+               x:Class="RadioApp.Pages.ChooseTagPage"
+               x:Name="self">
+    <Grid BackgroundColor="{AppThemeBinding Dark={StaticResource DarkBackground},Light={StaticResource LightBackground}}">
+        <ScrollView>
+            <StackLayout
+                Margin="{OnPlatform WinUI=16,MacCatalyst=16,Android='10',iOS='10'}"
+                BindableLayout.ItemsSource="{Binding AllTypes, Source={x:Reference self}}"
+                Spacing="30">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Grid
+                            ColumnSpacing="10"
+                            RowDefinitions="{OnPlatform WinUI='Auto',MacCatalyst='Auto',Android='30,Auto',iOS='30,Auto'}"
+                            ColumnDefinitions="{OnPlatform WinUI='60,*',MacCatalyst='60,*',Android='*',iOS='*'}">
+                            <Label
+                                Grid.Row="{OnPlatform WinUI='0',MacCatalyst='0',Android='0',iOS='0'}"
+                                Grid.Column="{OnPlatform WinUI='0',MacCatalyst='0',Android='0',iOS='0'}"
+                                FontAttributes="Bold"
+                                HorizontalTextAlignment="{OnPlatform WinUI='End',MacCatalyst='End',Android='Start',iOS='Start'}"
+                                Margin="{OnPlatform WinUI='0,13,0,0',MacCatalyst='0,13,0,0',Android='0',iOS='0'}"
+                                Text="{Binding TypeName}"/>
+
+                            <CollectionView
+                                Grid.Row="{OnPlatform WinUI='0',MacCatalyst='0',Android='1',iOS='1'}"
+                                Grid.Column="{OnPlatform WinUI='1',MacCatalyst='1',Android='0',iOS='0'}"
+                                ItemsSource="{Binding Tags}"
+                                ItemsLayout="{OnPlatform WinUI='VerticalGrid, 6',MacCatalyst='VerticalGrid, 6',Android='VerticalGrid, 4',iOS='VerticalGrid, 4'}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid RowDefinitions="40">
+                                            <hc:HandCursorLabel
+                                                Text="{Binding Name}"
+                                                FontSize="16"
+                                                HorizontalTextAlignment="Center"
+                                                VerticalTextAlignment="Center">
+                                                <hc:HandCursorLabel.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Tapped="TagSelected_Tapped"
+                                                        CommandParameter="{Binding Id}"/>
+                                                </hc:HandCursorLabel.GestureRecognizers>
+                                            </hc:HandCursorLabel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </Grid>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </StackLayout>
+        </ScrollView>
+    </Grid>
+</toolkit:Popup>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+     xmlns:pages="clr-namespace:RadioApp.Pages"
+     xmlns:root="clr-namespace:RadioApp"
+     xmlns:viewmodels="clr-namespace:RadioApp.ViewModels"
+     x:DataType="viewmodels:ShellViewModel"
+     x:Class="RadioApp.Pages.MobileShell"
+     Shell.TabBarUnselectedColor="{AppThemeBinding Dark={StaticResource DarkTabBarUnselectedColor},Light={StaticResource LightTabBarUnselectedColor}}"
+     Shell.TabBarTitleColor="{AppThemeBinding Dark={StaticResource DarkTabBarTitleColor},Light={StaticResource LightTabBarTitleColor}}"
+     Shell.TabBarBackgroundColor="{AppThemeBinding Dark={StaticResource DarkTabBarBackgroundColor},Light={StaticResource LightTabBarBackgroundColor}}"
+    >
+
+    <TabBar>
+        <Tab Title="Discover"
+     Icon="{AppThemeBinding Light=discover.png, Dark=discover_dark.png}">
+            <ShellContent ContentTemplate="{DataTemplate pages:HomePage}"/>
+        </Tab>
+        <Tab Title="{Binding Playlist.Title}"
+     Icon="{Binding Playlist.Icon}">
+            <ShellContent ContentTemplate="{DataTemplate pages:PlaylistPage}" />
+        </Tab>
+        <Tab Title="{Binding MyFavorite.Title}"
+     Icon="{Binding MyFavorite.Icon}">
+            <ShellContent ContentTemplate="{DataTemplate pages:MyFavoritePage}" />
+        </Tab>
+        <Tab Title="{Binding Settings.Title}"
+     Icon="{Binding Settings.Icon}" >
+            <ShellContent ContentTemplate="{DataTemplate pages:SettingsPage}" />
+        </Tab>
+
+    </TabBar>
+
+</Shell>

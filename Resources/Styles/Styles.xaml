@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:handCursorControls="clr-namespace:RadioApp.HandCursorControls">
+    
+    <!--App-->
+    <Style TargetType="Label" x:Key="Logo">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontFamily" Value="blod"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightLogo}, Dark={StaticResource DarkLogo}}" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="Title">
+        <Setter Property="FontSize" Value="{OnPlatform WinUI=20,MacCatalyst=20,Android=18,iOS=18}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTitle}, Dark={StaticResource DarkTitle}}" />
+    </Style>
+    
+    <Style TargetType="Label" x:Key="Explain">
+        <Setter Property="FontSize" Value="{OnPlatform WinUI=13,MacCatalyst=13,Android=12,iOS=12}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextSecond}, Dark={StaticResource DarkTextSecond}}" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="ExplainFontSize">
+        <Setter Property="FontSize" Value="13" />
+    </Style>
+    <Style TargetType="Label">
+        <Setter Property="FontSize" Value="{OnPlatform WinUI=15,MacCatalyst=15,Android=16,iOS=16}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}" />
+    </Style>
+    
+    <Style TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource LightActivity}, Dark={StaticResource DarkActivity}}"/>
+    </Style>
+    
+    <Style TargetType="SearchBar"
+       ApplyToDerivedTypes="True">
+        <Setter Property="Placeholder" Value="search"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}" />
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource LightPlaceholder}, Dark={StaticResource DarkPlaceholder}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}" />
+    </Style>
+    
+    <Style TargetType="Border">
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource LightBorder}, Dark={StaticResource DarkBorder}}"/>
+    </Style>
+
+    <Style TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource DarkBtnBackground},Light={StaticResource LightBtnBackground}}"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource DarkBtnText},Light={StaticResource LightBtnText}}"/>
+    </Style>
+
+
+    <Style TargetType="handCursorControls:HandCursorButton">
+        <Setter Property="BackgroundColor"
+            Value="{AppThemeBinding Dark={StaticResource DarkBtnBackground},Light={StaticResource LightBtnBackground}}"/>
+        <Setter Property="TextColor"
+            Value="{AppThemeBinding Dark={StaticResource DarkBtnText},Light={StaticResource LightBtnText}}"/>
+    </Style>
+    
+    <Style TargetType="Switch">
+        <!--On Windows, there is an On Off text icon behind the switch. Use Margin to force the interface to be squeezed out.-->
+        <Setter Property="Margin"
+             Value="{OnPlatform WinUI='0,0,-125,0',MacCatalyst='0,0,-125,0',Android='0',iOS='0'}" />
+        <Setter Property="OnColor"
+             Value="{AppThemeBinding Dark={StaticResource DarkSwitchOnColor},Light={StaticResource LightSwitchOnColor}}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="On">
+                        <VisualState.Setters>
+                            <Setter Property="ThumbColor"
+                         Value="{AppThemeBinding Dark={StaticResource DarkSwitchThumbOnColor},Light={StaticResource LightSwitchThumbOnColor}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Off">
+                        <VisualState.Setters>
+                            <Setter Property="ThumbColor"
+                         Value="{AppThemeBinding Dark={StaticResource DarkSwitchThumbOffColor},Light={StaticResource LightSwitchThumbOffColor}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style x:Key="StackLayoutLoading" TargetType="StackLayout">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsLoading}"  Value="True"  TargetType="StackLayout">
+                <Setter Property="Opacity"  Value="0.2"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsLoading}"  Value="False"  TargetType="StackLayout">
+                <Setter Property="Opacity"  Value="1"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="GridLoading" TargetType="Grid">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsLoading}"  Value="True" TargetType="Grid">
+                <Setter Property="Opacity" Value="0.2"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsLoading}" Value="False" TargetType="Grid">
+                <Setter Property="Opacity"  Value="1"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style
+    x:Key="DataRowEnter"
+    TargetType="StackLayout">
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter  Property="BackgroundColor" Value="Transparent" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource DarkRowEnterColor},Light={StaticResource LightRowEnterColor}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style
+    x:Key="Tab"
+    TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTitle}, Dark={StaticResource DarkTitle}}" />
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontAttributes" Value="None"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="Transparent" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource DarkRowEnterColor},Light={StaticResource LightRowEnterColor}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+</ResourceDictionary>

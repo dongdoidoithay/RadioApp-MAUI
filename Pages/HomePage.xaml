@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:RadioApp.ViewModels"
+             x:Class="RadioApp.Pages.HomePage"
+             xmlns:controls="clr-namespace:RadioApp.Controls"
+             xmlns:hc="clr-namespace:RadioApp.HandCursorControls"
+             Shell.NavBarIsVisible="False"
+             NavigationPage.HasNavigationBar="False"
+             xmlns:res="clr-namespace:RadioApp.Resources.Strings">
+    <Grid RowDefinitions="Auto,Auto,*,Auto"
+          RowSpacing="10"
+          Background="{AppThemeBinding Light={StaticResource Grey1}, Dark={StaticResource Grey9}}">
+        <Grid Grid.Row="0"
+              ColumnDefinitions="0.7*,0.15*,0.15*"
+              ColumnSpacing="5"
+              Padding="5">
+            <Border Grid.Column="0"
+                    HeightRequest="35"
+                    VerticalOptions="Start"
+                    Padding="5,0,5,0"
+                    Background="{AppThemeBinding Light={StaticResource Grey1}, Dark={StaticResource Grey9}}"
+                    StrokeThickness="1"
+                    Stroke="Red">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="5" />
+                </Border.StrokeShape>
+                <HorizontalStackLayout Spacing="5"
+                                       BackgroundColor="Transparent">
+                    <HorizontalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:HomePageViewModel}}, Path=GoToSearchPageAsyncCommand}" />
+                    </HorizontalStackLayout.GestureRecognizers>
+                    <Image Source="{AppThemeBinding Dark='search_dark.png',Light='search.png'}"
+                           Aspect="AspectFill"
+                           WidthRequest="15"
+                           HeightRequest="15"
+                           VerticalOptions="Center" />
+                    <Label VerticalTextAlignment="Center"
+                           FontSize="{OnPlatform WinUI=14,MacCatalyst=14,Android=13,iOS=13}"
+                           Text="Episode search" />
+                </HorizontalStackLayout>
+            </Border>
+            <Image Grid.Column="1"
+                   Source="settings_dark.png"
+                   BackgroundColor="Orange" />
+
+            <Image Grid.Column="2"
+                   Source="tab_home_on.png"
+                   BackgroundColor="Gainsboro" />
+        </Grid>
+        <Grid Grid.Row="1">
+            <CollectionView VerticalOptions="FillAndExpand"
+                            ItemsSource="{Binding HomeCates}"
+                            ItemsLayout="HorizontalGrid, 1"
+                            RemainingItemsThreshold="{OnPlatform WinUI=5,MacCatalyst=5,Android=1,iOS=1}"
+                            Scrolled="CollectionView_Scrolled">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Button Text="{Binding Name}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:HomePageViewModel}}, Path=TabChangedAsyncCommand}"
+                                CommandParameter="{Binding CateId}"
+                                BackgroundColor="Gainsboro"
+                                Margin="5">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button"
+                                             Binding="{Binding IsSelected}"
+                                             Value="true">
+                                    <Setter Property="BackgroundColor"
+                                            Value="Red" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+
+        <Grid Grid.Row="2"
+              BackgroundColor="GhostWhite">
+            <VerticalStackLayout Spacing="5">
+                <!--<ActivityIndicator IsRunning="true" />-->
+                <VerticalStackLayout Spacing="3"
+                                     VerticalOptions="End"
+                                     HorizontalOptions="Start">
+                    <Label Text="{x:Static res:AppResource.Categories}"
+                           Style="{StaticResource Tab}" />
+                    <BoxView HeightRequest="3"
+                             WidthRequest="100"
+                             Margin="0,0,8,0"
+                             Color="{StaticResource Primary}">
+                    </BoxView>
+                </VerticalStackLayout>
+
+                <CollectionView ItemsSource="{Binding HomeCateChild}"
+                                ItemsUpdatingScrollMode="KeepLastItemInView"
+                                VerticalOptions="Fill"
+                                ItemsLayout="VerticalGrid,3">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+
+                            <Border Stroke="Red"
+                                    StrokeShape="RoundRectangle 5,5,5,5"
+                                    Margin="5"
+                                    Padding="5"
+                                    MinimumHeightRequest="100">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:HomePageViewModel}}, Path=GoToDetailCateAsyncCommand}"
+                                                          CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+
+                                <StackLayout>
+                                    <!--<ff:CachedImage  Source="{Binding image}"
+                                                 ErrorPlaceholder="default_podcast_image.png"
+                                                 LoadingPlaceholder="loading_image.png" />-->
+                                    <Image Source="tab_home_on.png" />
+
+                                    <Label Text="{Binding Name}"
+                                           Padding="5,5,0,0"
+                                           FontSize="14" />
+                                </StackLayout>
+
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <BoxView HeightRequest="3"
+                         WidthRequest="100"
+                         Margin="0,0,8,0"
+                         Color="{StaticResource Primary}">
+                </BoxView>
+            </VerticalStackLayout>
+        </Grid>
+        <controls:Player
+            Grid.Row="3"
+            x:Name="player"
+            IsPlayingPage="False"/>
+    </Grid>
+</ContentPage>

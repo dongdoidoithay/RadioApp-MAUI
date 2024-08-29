@@ -1,0 +1,293 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:RadioApp.Controls"
+             xmlns:hc="clr-namespace:RadioApp.HandCursorControls"
+             x:Class="RadioApp.Controls.Player">
+
+    <ContentView.Content>
+        <ContentView x:Name="MainBlock" BackgroundColor="Gray">
+            <OnPlatform x:TypeArguments="View">
+                <On Platform="WinUI, macOS">
+                    <HorizontalStackLayout
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Spacing="10">
+
+                        <hc:HandCursorImage 
+                            x:Name="ImgBack"
+                            WidthRequest="40"
+                            HeightRequest="40"
+                            Aspect="AspectFill"
+                            ToolTipProperties.Text="Last">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="Previous_Tapped"/>
+                            </Image.GestureRecognizers>
+                        </hc:HandCursorImage>
+
+                        <hc:HandCursorImage 
+                            x:Name="ImgPlay"
+                            WidthRequest="50"
+                            HeightRequest="50"
+                            Aspect="AspectFill">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="ImgPlay_Tapped"></TapGestureRecognizer>
+                            </Image.GestureRecognizers>
+                        </hc:HandCursorImage>
+
+                        <hc:HandCursorImage 
+                            x:Name="ImgNext"
+                            WidthRequest="40"
+                            HeightRequest="40"
+                            Aspect="AspectFill"
+                            ToolTipProperties.Text="Next">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="Next_Tapped"/>
+                            </Image.GestureRecognizers>
+                        </hc:HandCursorImage>
+
+                        <Grid RowDefinitions="50*,50*"
+                              ColumnDefinitions="80,280,100"
+                              Margin="0,0,40,0">
+                            <Border
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Grid.RowSpan="2"
+                                WidthRequest="60"
+                                HeightRequest="60"
+                                StrokeThickness="0.1"
+                                StrokeShape="RoundRectangle 5">
+                                <hc:HandCursorImage
+                                    x:Name="ImgCurrentMusic"
+                                    Aspect="AspectFill"
+                                    ToolTipProperties.Text="Open the play page">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="GoToPlayingPage_Tapped"/>
+                                    </Image.GestureRecognizers>
+                                </hc:HandCursorImage>
+                            </Border>
+
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                x:Name="LblMusicInfo"
+                                Style="{StaticResource Explain}"
+                                VerticalTextAlignment="Center"
+                                LineBreakMode="TailTruncation"/>
+
+                            <HorizontalStackLayout
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                HorizontalOptions="End">
+                                <Label 
+                                    x:Name="LblPosition"
+                                    Style="{StaticResource Explain}"
+                                    VerticalTextAlignment="Center"/>
+                                <Label
+                                    x:Name="LblProgressSplit"
+                                    Margin="5,0,5,0"
+                                    Text="/"
+                                    Style="{StaticResource Explain}"
+                                    VerticalTextAlignment="Center"/>
+                                <Label 
+                                    x:Name="LblDuration"
+                                    Style="{StaticResource Explain}"
+                                    VerticalTextAlignment="Center"/>
+                            </HorizontalStackLayout>
+
+                            <Slider
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                x:Name="SliderPlayProgress"
+                                HorizontalOptions="Fill"
+                                Minimum="0"
+                                Maximum="1"
+                                DragStarted="SliderPlayProgress_DragStarted"
+                                DragCompleted="SliderPlayProgress_DragCompleted">
+                            </Slider>
+                        </Grid>
+
+                        <hc:HandCursorImage 
+                            x:Name="ImgRepeat"
+                            WidthRequest="20"
+                            HeightRequest="20"
+                            Aspect="AspectFill">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="ImgRepeat_Tapped"/>
+                            </Image.GestureRecognizers>
+                        </hc:HandCursorImage>
+
+                        <HorizontalStackLayout 
+                            Grid.Column="2"
+                            Spacing="10">
+                            <controls:FavoriteView
+                                x:Name="FavoriteView"
+                                WidthRequest="20"
+                                HeightRequest="20"
+                                VerticalOptions="Center"/>
+                            <hc:HandCursorImage
+                                x:Name="ImgSoundOff"
+                                HeightRequest="20"
+                                WidthRequest="20"
+                                Aspect="AspectFill"
+                                ToolTipProperties.Text="Volume setting">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="ImgSoundOff_Tapped"/>
+                                </Image.GestureRecognizers>
+                            </hc:HandCursorImage>
+
+                            <Slider 
+                                x:Name="SliderVolume"
+                                WidthRequest="90"
+                                VerticalOptions="Center"
+                                Minimum="0"
+                                Maximum="100"
+                                MinimumTrackColor="{Binding MinimumTrackColor, Source={x:Reference SliderPlayProgress}}"
+                                MaximumTrackColor="{Binding MaximumTrackColor, Source={x:Reference SliderPlayProgress}}"
+                                ThumbColor="{Binding ThumbColor, Source={x:Reference SliderPlayProgress}}"
+                                ValueChanged="SliderVolume_ValueChanged"/>
+                        </HorizontalStackLayout>
+                    </HorizontalStackLayout>
+                </On>
+                <On Platform="Android,iOS">
+                    <StackLayout Margin="10,5,10,5">
+                        <!-- Progress bar -->
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{Binding Text, Source={x:Reference LblPosition}}"
+                                   TextColor="{Binding TextColor, Source={x:Reference LblMusicInfo}}"
+                                   HorizontalOptions="Start"
+                                   VerticalTextAlignment="Center" />
+                            <Slider Margin="5,0,5,0"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="Center"
+                                    Value="{Binding Value, Source={x:Reference SliderPlayProgress}}"
+                                    Minimum="{Binding Minimum, Source={x:Reference SliderPlayProgress}}"
+                                    Maximum="{Binding Maximum, Source={x:Reference SliderPlayProgress}}"
+                                    MinimumTrackColor="{Binding MinimumTrackColor, Source={x:Reference SliderPlayProgress}}"
+                                    MaximumTrackColor="{Binding MaximumTrackColor, Source={x:Reference SliderPlayProgress}}"
+                                    ThumbColor="{Binding ThumbColor, Source={x:Reference SliderPlayProgress}}"
+                                    DragStarted="SliderPlayProgress_DragStarted"
+                                    DragCompleted="SliderPlayProgress_DragCompleted">
+                            </Slider>
+                            <Label Text="{Binding Text, Source={x:Reference LblDuration}}"
+                                   TextColor="{Binding TextColor, Source={x:Reference LblMusicInfo}}"
+                                   HorizontalOptions="End"
+                                   VerticalTextAlignment="Center" />
+                        </StackLayout>
+                        <!--Mini component-->
+                        <StackLayout 
+                            x:Name="PhoneMiniPlayer"
+                            Orientation="Horizontal"
+                            Padding="0,10,0,0">
+                            <Border
+                                HeightRequest="30"
+                                HorizontalOptions="Start"
+                                StrokeThickness="0.1"
+                                StrokeShape="RoundRectangle 10">
+                                <Image
+                                    Aspect="AspectFill"
+                                    Source="{Binding Source, Source={x:Reference ImgCurrentMusic}}">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="GoToPlayingPage_Tapped"/>
+                                    </Image.GestureRecognizers>
+                                </Image>
+                            </Border>
+                            <Label 
+                                Margin="5,0,0,0"
+                                TextColor="{Binding TextColor, Source={x:Reference LblMusicInfo}}"
+                                FontSize="13"
+                                HorizontalOptions="StartAndExpand"
+                                VerticalTextAlignment="Center"
+                                Text="{Binding Text,Source={x:Reference LblMusicInfo}}"
+                                LineBreakMode="TailTruncation">
+                            </Label>
+
+                            <Image 
+                                WidthRequest="30"
+                                HeightRequest="30"
+                                Aspect="AspectFill"
+                                HorizontalOptions="End"
+                                VerticalOptions="CenterAndExpand"
+                                Source="{Binding Source, Source={x:Reference ImgPlay}}">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="ImgPlay_Tapped"/>
+                                </Image.GestureRecognizers>
+                            </Image>
+                        </StackLayout>
+                      
+
+                        <!--Complete component-->
+                        <StackLayout x:Name="PhoneFullPlayer">
+                           
+                            <!-- Play button -->
+                            <Grid
+                                ColumnDefinitions="*,*,*,*,*"
+                                Margin="0,5,0,10">
+                                <Image
+                                    Source="{Binding Source, Source={x:Reference ImgRepeat}}"
+                                    Grid.Column="0"
+                                    WidthRequest="30"
+                                    HeightRequest="30"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"
+                                    Aspect="AspectFill">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="ImgRepeat_Tapped"/>
+                                    </Image.GestureRecognizers>
+                                </Image>
+
+                                <Image
+                                    Source="{Binding Source, Source={x:Reference ImgBack}}"
+                                    Grid.Column="1"
+                                    WidthRequest="30"
+                                    HeightRequest="30"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"
+                                    Aspect="AspectFill">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="Previous_Tapped"/>
+                                    </Image.GestureRecognizers>
+                                </Image>
+
+                                <Image
+                                    Source="{Binding Source, Source={x:Reference ImgPlay}}"
+                                    Grid.Column="2"
+                                    WidthRequest="50"
+                                    HeightRequest="50"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"
+                                    Aspect="AspectFill">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="ImgPlay_Tapped"/>
+                                    </Image.GestureRecognizers>
+                                </Image>
+
+                                <Image
+                                    Source="{Binding Source, Source={x:Reference ImgNext}}"
+                                    Grid.Column="3"
+                                    WidthRequest="30"
+                                    HeightRequest="30"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"
+                                    Aspect="AspectFill">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="Next_Tapped"/>
+                                    </Image.GestureRecognizers>
+                                </Image>
+
+                                <controls:FavoriteView
+                                    Music="{Binding  ., Source={x:Reference FavoriteView}}"
+                                    Grid.Column="4"
+                                    WidthRequest="30"
+                                    HeightRequest="30"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"/>
+                            </Grid>
+                        </StackLayout>
+                    </StackLayout>
+                </On>
+            </OnPlatform>
+        </ContentView>
+    </ContentView.Content>
+</ContentView>

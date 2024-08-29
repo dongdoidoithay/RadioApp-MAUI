@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:RadioApp.Controls"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:gaussianImage="clr-namespace:RadioApp.Handlers.GaussianImage"
+             x:Class="RadioApp.Pages.PlayingPage"
+             Title="Now Playing">
+    <ContentPage.Resources>
+        <Style x:Key="LyricItem" TargetType="Label">
+            <Setter Property="TextColor"
+                    Value="{StaticResource PlayingPageLyricText}" />
+            <Setter Property="FontSize"
+                    Value="15"/>
+            <Setter Property="HorizontalTextAlignment"
+                    Value="Center"/>
+            <Setter Property="VerticalTextAlignment"
+                    Value="Center"/>
+            <Setter Property="HorizontalOptions"
+                    Value="CenterAndExpand"/>
+            <Setter Property="VerticalOptions"
+                    Value="CenterAndExpand"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsHighlight}"
+                             Value="True"
+                             TargetType="Label">
+                    <Setter Property="TextColor"
+                            Value="{StaticResource PlayingPageLyricHighlight}" />
+                    <Setter Property="FontSize"
+                            Value="17"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid BackgroundColor="{StaticResource PlayingPageBackgroundColor}">
+        <gaussianImage:GaussianImage
+            SourceByteArray="{Binding CurrentMusicImageByteArray}"
+            BackgroundColor="#000"
+            Opacity="0.6"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand"/>
+
+        <Grid
+            RowDefinitions="{OnPlatform WinUI='*,90',Android='300,*,130',iOS='300,*,130'}"
+            ColumnDefinitions="{OnPlatform WinUI='*,*',Android='*',iOS='*'}"
+            Style="{StaticResource GridLoading}"
+            VerticalOptions="FillAndExpand">
+            <StackLayout
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="{OnPlatform WinUI='20,80,10,80',Android='20,10,20,0',iOS='20,10,20,0'}">
+                <Border
+                    StrokeThickness="0.1"
+                    WidthRequest="250"
+                    StrokeShape="RoundRectangle 5">
+                    <Image
+                        HorizontalOptions="Center"
+                        Aspect="AspectFit"                        
+                        Source="{Binding CurrentMusicImageByteArray, Mode=OneWay, Converter={StaticResource ByteArrayToImageSourceConverter}}"/>
+                </Border>
+                <Label
+                    Margin="0,10,0,0"
+                    HorizontalOptions="Center"
+                    Text="{Binding ShareLabelText}"
+                    TextColor="{StaticResource PlayingPageText}">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ShareMusicLinkAsyncCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+
+            </StackLayout>
+
+            <StackLayout
+                Grid.Row="{OnPlatform WinUI='0',Android='1',iOS='1'}"
+                Grid.Column="{OnPlatform WinUI='1',Android='0',iOS='0'}"
+                Margin="{OnPlatform WinUI='10,80,20,80',Android='20,10,10,0',iOS='20,10,20,0'}">
+                <Label
+                    Text="No songs are currently played"
+                    TextColor="{StaticResource PlayingPageText}"
+                    HorizontalTextAlignment="Center"
+                    IsVisible="{Binding CurrentMusic, Converter={StaticResource IsEqualConverter}}"/>
+
+                <StackLayout
+                    VerticalOptions="FillAndExpand"
+                    IsVisible="{Binding CurrentMusic, Converter={StaticResource IsNotEqualConverter}}">
+
+                    <StackLayout
+                        Orientation="Horizontal"
+                        HorizontalOptions="CenterAndExpand">
+
+                        <Border
+                            Padding="4,0,4,0"
+                            Stroke="{StaticResource PlayingPageText}"
+                            StrokeThickness="1"
+                            BackgroundColor="Transparent"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="5" />
+                            </Border.StrokeShape>
+                            <Label
+                                Text="{Binding CurrentMusic.PlatformName}"
+                                FontSize="16"
+                                TextColor="{StaticResource PlayingPageText}"/>
+                        </Border>
+
+                        <Label
+                            Margin="10,0,0,0"
+                            Text="{Binding CurrentMusic.Name}"
+                            TextColor="{StaticResource PlayingPageText}"
+                            FontSize="22"
+                            VerticalOptions="Center"
+                            HorizontalTextAlignment="Center"/>
+                    </StackLayout>
+
+                    <StackLayout
+                        VerticalOptions="Start"
+                        Margin="0,10,0,30">
+                        <Label
+                            TextColor="{StaticResource PlayingPageTextSecond}"
+                            FontSize="16"
+                            HorizontalTextAlignment="Center">
+                            <MultiBinding StringFormat="{}{0} - {1}">
+                                <Binding Path="CurrentMusic.Artist" />
+                                <Binding Path="CurrentMusic.Album" />
+                            </MultiBinding>
+                        </Label>
+                    </StackLayout>
+
+                    <!-- lyrics -->
+                    <CollectionView
+                        HorizontalOptions="FillAndExpand"
+                        VerticalOptions="FillAndExpand"                                   
+                        x:Name="ListLyrics"
+                        EmptyView="暂无歌词"
+                        ItemsSource="{Binding Lyrics}"
+                        SelectionMode="None">
+                        <CollectionView.Behaviors>
+                            <mct:EventToCommandBehavior
+                                EventName="Scrolled"
+                                Command="{Binding LyricsScrolledDoCommand}"/>
+
+                        </CollectionView.Behaviors>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"                                    
+                                    HeightRequest="{OnPlatform WinUI=40,Android=30,iOS=30}">
+                                    <Label
+                                        Text="{Binding Info}"
+                                        Style="{StaticResource LyricItem}"/>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
+            </StackLayout>
+
+            <StackLayout
+                Grid.Row="{OnPlatform WinUI='1',Android='2',iOS='2'}"
+                Grid.Column="0"
+                Grid.ColumnSpan="{OnPlatform WinUI='2',Android='1',iOS='1'}"
+                Margin="{OnPlatform WinUI='0,0,0,0',Android='0,20,0,0',iOS='0,20,0,0'}">
+                <controls:Player x:Name="player"
+                                 IsPlayingPage="True"/>
+            </StackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>

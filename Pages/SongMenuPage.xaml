@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:RadioApp.Controls"
+             xmlns:hc="clr-namespace:RadioApp.HandCursorControls"
+             x:Class="RadioApp.Pages.SongMenuPage"
+             Title="SongMenuPage">
+    <Grid
+        BackgroundColor="{AppThemeBinding Dark={StaticResource DarkBackground},Light={StaticResource LightBackground}}"
+        RowDefinitions="Auto,*">
+        <VerticalStackLayout
+            Grid.Row="0"
+            Padding="{OnPlatform WinUI='10,10,10,0',MacCatalyst='10,10,10,0',Android='15,10,15,0',iOS='15,10,15,0'}"
+            Spacing="10">
+            <Label
+                FontSize="17"
+                Text="{Binding SongMenu.PlatformName}"
+                TextColor="{StaticResource Main}"/>
+            <HorizontalStackLayout Spacing="10">
+                <Border
+                    StrokeThickness="0.1"
+                    StrokeShape="RoundRectangle 10">
+                    <Image
+                        WidthRequest="{OnPlatform WinUI=120,MacCatalyst=120,Android=100,iOS=100}"
+                        HeightRequest="{OnPlatform WinUI=120,MacCatalyst=120,Android=100,iOS=100}"
+                        VerticalOptions="Start"
+                        Source="{Binding SongMenu.ImageUrl}"/>
+                </Border>
+
+                <VerticalStackLayout Spacing="10">
+                    <Label
+                        FontSize="17"
+                        Text="{Binding SongMenu.Name}"
+                        LineBreakMode="WordWrap"/>
+                    <hc:HandCursorButton
+                        Text="Play all"
+                        HorizontalOptions="Start"
+                        Command="{Binding PlayAllAsyncCommand}"/>
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+        <Border
+            Grid.Row="1"
+            StrokeThickness="0"
+            BackgroundColor="Transparent">
+            <controls:MusicResultView
+                Musics="{Binding MusicResultCollection}"
+                PlayCommand="{Binding PlayAsyncCommand}"
+                PlayCommandParameter="{Binding .}"/>
+        </Border>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<CollectionView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:controls="clr-namespace:RadioApp.Controls"
+                x:Class="RadioApp.Controls.MusicResultView"
+                x:Name="self"
+                VerticalOptions="FillAndExpand"
+                ItemsSource="{Binding Musics, Source={x:Reference self}}"
+                IsGrouped="True">
+
+    <CollectionView.Resources>
+        <Style
+            x:Key="FeeType"
+            TargetType="Label">
+            <Setter
+                Property="TextColor"
+                Value="{AppThemeBinding Dark={StaticResource DarkFeeText},Light={StaticResource LightFeeText}}"/>
+            <Setter
+                Property="IsVisible"
+                Value="false"/>
+            <Style.Triggers>
+                <DataTrigger
+                    Binding="{Binding Fee}"
+                    Value="VIP"
+                    TargetType="Label">
+                    <Setter
+                        Property="IsVisible"
+                        Value="true"/>
+                </DataTrigger>
+                <DataTrigger
+                    Binding="{Binding Fee}"
+                    Value="试听"
+                    TargetType="Label">
+                    <Setter
+                        Property="IsVisible"
+                        Value="true"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </CollectionView.Resources>
+
+    <CollectionView.GroupHeaderTemplate>
+        <DataTemplate>
+            <Label
+                Text="{Binding Name}"
+                TextColor="{StaticResource Main}"
+                Margin="0,20,0,10"
+                Padding="5,0,5,0"
+                FontSize="18"
+                IsVisible="{Binding IsMultiPlatform, Source={x:Reference self}}"
+                FontAttributes="Bold"/>
+        </DataTemplate>
+    </CollectionView.GroupHeaderTemplate>
+    <CollectionView.ItemTemplate>
+        <DataTemplate>
+            <StackLayout
+                Margin="{OnPlatform WinUI=0,MacCatalyst=0,Android='20,0,20,10',iOS='20,0,20,10'}"
+                Style="{StaticResource DataRowEnter}">
+                <OnPlatform x:TypeArguments="View">
+                    <On Platform="WinUI, macOS">
+                        <Grid ColumnDefinitions="30,40,60,300,300,*">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding PlayCommand, Source={x:Reference self}}"
+                                    CommandParameter="{Binding}"
+                                    NumberOfTapsRequired="2"/>
+                            </Grid.GestureRecognizers>
+                            <controls:FavoriteView
+                                Grid.Column="0"
+                                WidthRequest="15"
+                                HeightRequest="15"
+                                VerticalOptions="Center"
+                                Music="{Binding .}"/>
+                            <Label
+                                Grid.Column="1"
+                                Text="{Binding Fee}"
+                                Style="{DynamicResource FeeType}"
+                                VerticalOptions="Center"
+                                HorizontalOptions="Center"/>
+                            <Label
+                                Grid.Column="2"
+                                Text="{Binding Duration}"
+                                VerticalOptions="Center"
+                                LineBreakMode="TailTruncation"/>
+                            <Label
+                                Grid.Column="3"
+                                Text="{Binding Name}"
+                                VerticalOptions="Center"
+                                LineBreakMode="TailTruncation"/>
+                            <Label
+                                Grid.Column="4"
+                                Text="{Binding Artist}"
+                                VerticalOptions="Center"
+                                LineBreakMode="TailTruncation"/>
+                            <Label
+                                Grid.Column="5"
+                                Text="{Binding Album}"
+                                VerticalOptions="Center"
+                                LineBreakMode="TailTruncation"/>
+                        </Grid>
+                    </On>
+
+                    <On Platform="Android,iOS">
+                        <Grid
+                            Padding="3"
+                            RowSpacing="1"
+                            RowDefinitions="20,20"
+                            ColumnDefinitions="30,*,40">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding PlayCommand, Source={x:Reference self}}"
+                                    CommandParameter="{Binding}"/>
+                            </Grid.GestureRecognizers>
+
+                            <Label
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="0"
+                                Style="{StaticResource Explain}"
+                                Text="{Binding Seq}"
+                                HorizontalTextAlignment="Start"
+                                VerticalTextAlignment="Center"/>
+
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Text="{Binding Name}"
+                                VerticalOptions="Center"
+                                LineBreakMode="TailTruncation"/>
+
+                            <HorizontalStackLayout
+                                Grid.Row="1"
+                                Grid.Column="1">
+                                <Label
+                                    Text="{Binding Fee}"
+                                    Style="{DynamicResource FeeType}"
+                                    VerticalOptions="Center"/>
+                                <Label
+                                    Text="{Binding Artist}"
+                                    Style="{StaticResource Explain}"
+                                    VerticalOptions="Center"/>
+                                <Label
+                                    Text="{Binding Album,StringFormat='{} - {0}'}"
+                                    Style="{StaticResource Explain}"
+                                    IsVisible="{Binding Album, Converter={StaticResource IsStringNotNullOrWhiteSpaceConverter}}"
+                                    VerticalOptions="Center"
+                                    LineBreakMode="TailTruncation"/>
+                            </HorizontalStackLayout>
+
+                            <controls:FavoriteView
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Grid.RowSpan="2"
+                                WidthRequest="20"
+                                HeightRequest="20"
+                                VerticalOptions="Center"
+                                Music="{Binding  .}"/>
+                        </Grid>
+                    </On>
+                </OnPlatform>
+            </StackLayout>
+        </DataTemplate>
+    </CollectionView.ItemTemplate>
+</CollectionView>

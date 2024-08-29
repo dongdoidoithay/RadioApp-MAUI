@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:RadioApp.Pages"
+    x:Class="RadioApp.Pages.DesktopShell"
+    FlyoutBehavior="Locked"
+    FlyoutBackgroundColor="{AppThemeBinding Dark={StaticResource DarkFlyoutBackgroundColor},Light={StaticResource LightFlyoutBackgroundColor}}"
+    FlyoutWidth="150"
+    NavBarIsVisible="False"
+    Loaded="Shell_Loaded"
+    >
+    <Shell.FlyoutHeader>
+        <StackLayout Orientation="Horizontal"
+                     HeightRequest="68"
+                     WidthRequest="110"
+                     VerticalOptions="CenterAndExpand"
+                     Spacing="5">
+            <Image Source="{AppThemeBinding Light=logo.png,Dark=logo_dark.png}"
+                   WidthRequest="40"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center" />
+            <Label Text="Radio App"
+                   Style="{StaticResource Logo}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   VerticalTextAlignment="Center"/>
+        </StackLayout>
+    </Shell.FlyoutHeader>
+    <FlyoutItem Title="Home" Icon="{AppThemeBinding Light=discover.png, Dark=discover_dark.png}">
+        <Tab>
+            <ShellContent ContentTemplate="{DataTemplate pages:HomePage}"/>
+        </Tab>
+    </FlyoutItem>
+
+</Shell>
