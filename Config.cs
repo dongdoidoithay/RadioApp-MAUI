@@ -2,7 +2,7 @@
 
 public static class Config
 {
-    public static string APIUrl = $"https://api.novelfull.us";
+    public static string APIUrl = $"";
     public static bool Desktop
     {
         get
